@@ -1,6 +1,6 @@
 Rhennevad Maze
 v6.0.0
-(c) 2015-2017 Thomas Leathers
+Copyright (c) 2015-2017 Thomas Leathers
 
 
 Rhennevad Maze is free software: you can redistribute it and/or modify
