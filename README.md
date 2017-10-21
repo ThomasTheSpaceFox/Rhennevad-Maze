@@ -1,4 +1,5 @@
 Rhennevad Maze
+A Maze-centric 2D adventure game.
 v6.0.0
 Copyright (c) 2015-2017 Thomas Leathers
 
