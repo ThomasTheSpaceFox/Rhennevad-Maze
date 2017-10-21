@@ -11,5 +11,6 @@
 	<forks>
 	</forks>
 	<nodes>
+		<gem x="37" y="20" type="raingem" area="i"/>
 	</nodes>
 </main>

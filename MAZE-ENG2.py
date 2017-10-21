@@ -94,6 +94,8 @@ pygame.mixer.init()
 stepfx=pygame.mixer.Sound(os.path.join('AUDIO', 'step.ogg'))
 mipfx=pygame.mixer.Sound(os.path.join('AUDIO', 'mip.ogg'))
 gemfx=pygame.mixer.Sound(os.path.join('AUDIO', 'gemfx.ogg'))
+supergemfx=pygame.mixer.Sound(os.path.join('AUDIO', 'supergemfx.ogg'))
+
 levelwinfx=pygame.mixer.Sound(os.path.join('AUDIO', 'levelwin.ogg'))
 switchonfx=pygame.mixer.Sound(os.path.join('AUDIO', 'switchon.ogg'))
 switchofffx=pygame.mixer.Sound(os.path.join('AUDIO', 'switchoff.ogg'))
@@ -112,9 +114,9 @@ if useHW==1:
 	screensurf=pygame.Surface((400, 400), SRCALPHA|HWSURFACE).convert_alpha()
 	#screensurfscroll=pygame.Surface((560, 480), SRCALPHA|HWSURFACE).convert_alpha()
 else:
+	screensurfdex=pygame.display.set_mode((scrnx, scrny), RESIZABLE)
 	screensurf=pygame.Surface((400, 400), SRCALPHA).convert_alpha()
 	screensurfscroll=pygame.Surface((560, 480), SRCALPHA).convert_alpha()
-	#screensurfdex=pygame.display.set_mode((scrnx, scrny), RESIZABLE)
 pygame.display.set_icon(windowicon)
 pygame.display.set_caption("Rhennevad Maze", "Rhennevad Maze")
 debugmsg("Loading Graphical data.")
@@ -152,6 +154,7 @@ objgem=pygame.image.load(os.path.join('TILE', 'genwhite.png')).convert_alpha(scr
 objgemred=pygame.image.load(os.path.join('TILE', 'gemred.png')).convert_alpha(screensurf)
 objgemblue=pygame.image.load(os.path.join('TILE', 'gemblue.png')).convert_alpha(screensurf)
 objgemgreen=pygame.image.load(os.path.join('TILE', 'gemgreen.png')).convert_alpha(screensurf)
+objgemrain=pygame.image.load(os.path.join('TILE', 'gemrain.png')).convert_alpha(screensurf)
 
 
 
@@ -186,6 +189,7 @@ tileconcretefloor=pygame.image.load(os.path.join('TILE', 'concretefloor.png')).c
 tilesteelfloor=pygame.image.load(os.path.join('TILE', 'steelfloor.png')).convert(screensurf)
 tilegirderwall=pygame.image.load(os.path.join('TILE', 'girderwall.png')).convert(screensurf)
 tilegrate=pygame.image.load(os.path.join('TILE', 'grate.png')).convert_alpha(screensurf)
+SPECIALtilegrate=pygame.image.load(os.path.join('TILE', 'gratecliff.png')).convert_alpha(screensurf)
 
 #skytiles
 #sky1
@@ -760,6 +764,8 @@ def overlayscanB(xval, yval, xco, yco, drawfox=0, Qinside=0):
 	if shadblk!="z" and shadblk!="G":
 		if curblk=="z":
 			screensurf.blit(hintonsky, (xco, (yco)))
+		if curblk=="G":
+			screensurf.blit(SPECIALtilegrate, (xco, (yco)))
 	if shadblk=="1" or shadblk=="R" or shadblk=="r"  or shadblk=="c"   or shadblk=="t" or shadblk=="C" or shadblk=="Q" or shadblk=="P" or shadblk=="Z" or shadblk=="H":
 		if curblk!="1" and curblk!="R" and curblk!="C" and curblk!="c" and curblk!="t" and curblk!="r" and curblk!="Q" and curblk!="P" and curblk!="Z" and curblk!="H":
 			if shadblk=="R" or shadblk=="Q":
@@ -940,6 +946,8 @@ def overlayscanB(xval, yval, xco, yco, drawfox=0, Qinside=0):
 						screensurf.blit(objgemblue, (xco, yco))
 					if gemtype=="greengem":
 						screensurf.blit(objgemgreen, (xco, yco))
+					if gemtype=="raingem":
+						screensurf.blit(objgemrain, (xco, yco))
 	
 	
 	
@@ -2153,8 +2161,13 @@ while gameend==('0'):
 					pointcnt += 600
 				if gemtype=="greengem":
 					pointcnt += 1200
+				if gemtype=="raingem":
+					pointcnt += 10000
 				nodetag.remove(node)
-				gemfx.play()
+				if gemtype=="raingem":
+					supergemfx.play()
+				else:
+					gemfx.play()
 				#print pointcnt
 	if usrentry=="l" or usrentry=="space":
 		for node in nodetag.findall("look"):
