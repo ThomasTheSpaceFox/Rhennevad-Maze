@@ -1,0 +1,5 @@
+<conf>
+	<anim fastscrl="0" smoothscrl="1" />
+	<gfx hwaccel="1" rgbafilter="0" scrx="400" scry="400" />
+	<sound music="1" />
+</conf>

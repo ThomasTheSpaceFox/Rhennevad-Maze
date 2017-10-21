@@ -1,0 +1,219 @@
+TEXT MAZE FORMAT 2 TECHNICAL DOCUMENTATION
+setup section:
+<setup defaulttile="z" filter="1" bgmtrack="2"  a="140" r="0" g="10" b="130"> # see attributes subsection.
+		<mazename>Tutorial Level</mazename> # friendly name of maze. (used in upper hud)
+		<startposx>2</startposx> #x value of start position
+		<startposy>2</startposy>
+		<subdir>sample</subdir>
+	</setup>
+
+bgmtrack:
+number of the desired background music track:
+(music files are located in the audio directory.)
+"0"=vg-mus-0_theme.ogg
+"1"=vg-mus-1_main_menu.ogg
+"2"=vg-mus-2_spooky-hall.ogg
+"3"=vg-mus-3_darkfeilds.ogg
+maingrid:
+<maingrid>sample.main.grid</maingrid>
+points to the required main maze grid file. 
+
+optional attributes:
+defaulttile: set the default tile for when the graphical grid parser finds nothing.(a newline counts as "nothing") note how default tiles are always walls.
+keep this in mind.
+
+filter: enable outside RGBA filter (1=enable 0=disable)
+Note: works better for tinting. dark values might not work out well, as there is currently no "light nodes" of any sort. this may change.
+a: alpha value of filter
+r: red channel of filter
+g: green channel of filter
+b: blue channel of filter
+
+------
+x=columns
+y=lines.
+both start at >>>>ONE(1)<<<< NOT ZERO!
+note how the map is rotated 180 degrees from the player's view.
+------
+KEYIDs:
+a string containing only a zero "0" is NOT A VALID KEYID AND WONT BE HONORED!!!
+THAT ID IS USED AS A NULL DEFAULT.
+other than that KEYIDs can be arbitrary alphanumeric strings. it can be helpful to choose KEYIDs that describe their cause or effect. a key found in a poolhouse might be called poolkey. or a key to a shack might be called keytoshack. 
+a keyid representing an object might have a name like "beachball" or "book".
+you can also chain events such as conv, trigconv, teleport and the like, to create "cutscenes". the seaside park level, "park.xml" does this several times.
+
+KEYIDs are the basis for Text-maze format 2's scripted events.
+all nodes have optional "onkey" and "offkey" attributes.(each specifying a keyid.)
+-if onkey is specified. the player must have obtained that keyID!
+-if offkey is specified. the player must *NOT* obtained that keyID!
+-if neither are specified. that node will be honored regardless.
+-if BOTH onkey and offkey are specified, The player must have the keyid specified in onkey, and must NOT have the keyid specified in offkey.
+Gates: gates are an exception. specify "keyid" as the key needed to open the gate.
+(gates open automatically upon obtaining a keyid)
+Trig, Look, trigconv and Conv events:
+these events can specify "keyid" as a key to give the player.
+
+see the included sample mazes for some real code.
+------
+FORKS:
+forks are events that logically respond to changes in the keyids
+forks are the basis for complex scripting logic like puzzles in Text Maze Format 2.
+
+<batchtrig keyid="PUZdoor"> <!--note the master keyid that is toggled.-->
+	<k if="0" keyid="PUZswitch1"/> <!--#keyid PUZswitch1 must be absent-->
+	<k if="1" keyid="PUZswitch2"/> <!--#keyid PUZswitch2 must be present-->
+	<k if="1" keyid="PUZswitch3"/> <!--#keyid PUZswitch2 must be present-->
+</batchtrig>
+
+each keyid specified in a k tag is either given to, or taken (if set="0") from, or inverted (if set="2"), the player's keyid list.
+<batchset keyid="PUZreset" set="0"> <!--see 1-->
+	<k keyid="PUZswitch1"/> 
+	<k keyid="PUZswitch2"/> 
+	<k keyid="PUZswitch3"/>
+</batchset>
+
+<addpoints keyid="PUZreset" points="100"/>
+	triggered by keyid specified in "keyid"
+	removes keyid and adds number in "points" to the player's point total.
+
+<pointtrig keyid="PUZreset" points="100"/>
+	ensures keyid is present if player's points is at or greater specified points value.
+	else the keyid is actively removed.
+
+same as batchtrig, but only one of the conditions needs to be true.
+<ortrig keyid="alpha4">
+	<k if="1" keyid="switch1"/>
+	<k if="1" keyid="switch2"/>
+</ortrig>
+
+this uses a thrid "lock" keyid to isolate the "trigger" from "keyid".
+once triggered, it will not re-trigger until "lock" is not present, and "keyid" is.
+<triggerlock keyid="alpha3" lock="lock1" trigger="trigger1"/>
+
+
+
+<!--1: note the master keyid witch must be present for the batchset to occur.-->
+------
+NODES. nodes are different from tiles. this is used for triggered events such as trig and look.
+	all nodes have x and y attributes.
+	TYPES:
+	look: define text for the player character to "say" when he 
+		looks around on a defined grid point.
+	trig: trigger the player character to "say" text at a point.
+	the example with the quiet parameter set to 1 will be quiet. the same is true for look statements.
+	-ex
+		<trig x="14" y="38" quiet="1" offkey="bigbeachkey" text="Gate to big beach." face="3"/>
+		<trig x="7" y="52" keyid="bigbeachkey" offkey="bigbeachkey" text="hmm... Big Beach Key..." face="5"/>
+	label: a small visible text label in the maze.
+		note the "area" attribute:
+		"i"=inside "o"=outside "b"=both inside & outside
+		This determines the visibility of the label. it is possible to have
+		separate labels for inside and outside on the same grid point.
+	overlay: display overlay type: "type" at "x" and "y".
+		some overlays feature characters that can act as "npc-like" entities
+		perhaps someone giving a hint? perhaps with a label node?
+		or perhaps some casual chat with the conv node? :)
+		note the "area" attribute:
+		"i"=inside "o"=outside "b"=both inside & outside
+		This determines the visibility of the overlay. it is possible to have
+		separate overlays for inside and outside on the same grid point.
+		the optional "rotate" attribute can specify that the overlay be rotated.
+		"0"=normal "1"=90 degrees "2"=180 degrees "3"=270 degrees
+	walkable: force a gridpoint to be either "0" (walkable) or "1" (nonwalkable)
+		notice how this doesn't affect the appearance of the tile.
+	teleport: when the player reaches point "x" and "y", teleport the player to point "destx" and "desty". the engine will skip the keyscan for 1 loop to process any automatically triggered events at that point. this enables "chaining" of teleport with events following it.
+	conv: when the player presses "t" at point "x" "y", spawn the conversation
+		in the text span of the conv tag.
+		each line is iterated, 1 at a time. see the included maze xml files for examples. 
+	trigconv: similar to conv, only its automatically triggered when the player is at point "x" "y", spawn the conversation
+		in the text span of the conv tag.
+		each line is iterated, 1 at a time. see the included maze xml files for examples. 
+	gate: a quick keyid driven gate.
+		This is provided to be a quick gate. (faster than specifying on and off overlays, and a walkable, but not as flexible.)
+	switch: toggle the specified keyid in and out of the player's keyid list.
+		especially useful for fork logic, gates and such.
+	itemlist:
+		logically show a list of items based on the presence (or lack thereof) of specified keyids.
+		each "i" tag is an item.
+		listname: shown in the subtext margin. (dark area below lower hud) is the plain text name of the list.
+		hideon attribute: if 1. the list item will be hidden on the player having a keyid, if 0, the opposite occurs.
+		
+		<itemlist x="12" y="36" listname="Current tasks">
+			<i hideon="1" keyid="cert1" text="Flower Delivery."/>
+			<i hideon="1"  keyid="cert2" text="Monetary mouse."/>
+			<i hideon="1" keyid="cert3" text="Acidic switching."/>
+		</itemlist>
+	gem:
+		gem objects come in 4 types:
+		"gem" a normal, white gem. (100 points)
+		"redgem" a  red gem. (300 points)
+		"bluegem" a  blue gem. (600 points)
+		"greengem" a  green gem. (1200 points)
+		
+		<gem x="14" y="3" type="gem"/>
+-----
+valid tiles:
+"1" hedge (wall) (outside)
+"0" concrete path (floor) (outside)
+"B" brick path (floor) (outside)
+"3" exit tile (floor) (both/special) each maze should have 1 of these at the "end"
+"w" water (wall) (flat) (outside)
+"g" grass (floor) (outside)
+"s" sand (floor) (outside)
+"b" bridge (floor) (outside)
+"d" dock (floor) (outside)
+"R" wood beamed building wall (wall) (technically outside. (player would seem to be on a roof if spawned on one.)
+"r" red carpet (floor) (inside)
+"c" blue carpet (floor) (inside)
+"t" tile floor (floor) (inside)
+"G" metal grate open to the sky below.
+"e" dirt (floor) (outside)
+"S" stone (floor) (outside)
+"l" lava (wall) (flat) (outside)
+"X" toxic green goo (wall) (flat) (outside)
+"C" cobblestone wall (outside)
+"D" dark stone (floor) (outside)
+"Q" steel beamed building wall (wall) (technically outside. (player would seem to be on a roof if spawned on one.)
+"P" steel floor (inside)
+"Z" concrete floor (inside)
+"H" hardwood floor( inside)
+"z" sky below level. use for a "in the clouds" feeling. (varies based on selected background)
+-----
+valid overlay types:
+"2" bunny npc laying on beach towel
+"3" bunny npc laying on raft
+"4" bunny npc standing
+"flowers" some assorted flowers on the ground
+"sink" a sink
+"toilet" a toilet
+"crate" a wooden shipping crate
+"cat1" cat npc standing. (has fancy hat, male.)
+"cat2" cat npc standing. (female, blue shirt)
+"cat3" cat npc standing (male, overalls)
+"mouse1" mouse npc standing. (male, has green hat)
+"arrow" white arrow. signs fit in it nicely. use rotate attribute to point.
+"signwater" a water sign
+"signlava" a lava sign
+"signacid" an acid sign
+"signbeach" a beach sign
+"signdiner" a diner sign
+"signpool" a pool sign
+"signriver" a river sign
+"signtree" a tree sign
+"signbun" bunny NPC sign.
+"signinfo" info sign
+"signtask" a task sign.
+"NPCballoon" a npc balloon. signs fit in it nicely.
+"bulletin" a bulletin board. makes a nice "Jobs" or "Tasks" board
+
+-----
+hudface ("face") attribute:
+the look, trig, and conv, nodes have an optional "face" attribute.
+it can be used to change the "hud face" for that event.
+1=casual (default)
+2=sad
+3=angry
+4=shock
+5=happy
+6=bored
+-----
