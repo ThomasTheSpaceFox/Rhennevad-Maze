@@ -84,7 +84,7 @@ def resolvescreenscale():
 titlescreenbox = titlescreen.get_rect()
 titlescreenbox.centerx = screensurf.get_rect().centerx
 titlescreenbox.centery = ((screensurf.get_rect().centery) - 90)
-screensurf.blit(titlescreen, (0, 40))
+screensurf.blit(titlescreen, (0, 0))
 screensurf.blit(titlebg, (0, 0))
 
 
@@ -117,7 +117,7 @@ while menusel!="quit":
 		print ("Maze execution complete, returning to menu.")
 		pygame.display.set_caption("Rhennevad Maze menu", "Rhennevad Maze menu")
 		screensurf.fill((100, 120, 100))
-		screensurf.blit(titlescreen, (0, 40))
+		screensurf.blit(titlescreen, (0, 0))
 		screensurf.blit(titlebg, (0, 0))
 		#screensurf.blit(titlescreen, titlescreenbox)
 		
