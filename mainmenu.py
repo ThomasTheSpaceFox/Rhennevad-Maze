@@ -107,7 +107,7 @@ menusel="null"
 simplefontB = pygame.font.SysFont(None, 22)
 simplefont = pygame.font.SysFont(None, 16) #define a simple font from the system fonts
 ixplaymus=0
-popuptextMENU("Rhennevad Maze 6.0.0 (c) 2015-2017 Thomas Leathers")
+popuptextMENU("Rhennevad Maze 6.0.0  Copyright (c) 2015-2017 Thomas Leathers")
 ixreturn=0
 while menusel!="quit":
 	#does things that need done upon returning to the menu from an option.
@@ -118,9 +118,9 @@ while menusel!="quit":
 		screensurf.blit(titlebg, (0, 0))
 		#screensurf.blit(titlescreen, titlescreenbox)
 		screensurf.blit(titlescreen, (0, 20))
-		popuptextMENU("Rhennevad Maze 6.0.0 (c) 2015-2017 Thomas Leathers")
+		popuptextMENU("Rhennevad Maze 6.0.0  Copyright (c) 2015-2017 Thomas Leathers")
 		ixreturn=0
-		
+		pygame.key.set_repeat()
 		if musicflg==1 and ixplaymus==1:
 			pygame.mixer.music.load(os.path.join('AUDIO', 'vg-mus-0_theme.ogg'))
 			pygame.mixer.music.play(-1)

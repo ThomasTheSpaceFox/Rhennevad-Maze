@@ -160,46 +160,25 @@ while optpick!=1:
 		HWDIP="use hardware surface for playfield (currently on)"
 	else:
 		HWDIP="use hardware surface for playfield (currently off)"
-	optdesc=('return to main menu', RGBFILDIP, SMSCDIP, MUSDIP, FASDIP, HWDIP)
-	optlist=("main menu", "RGB filter", "Smooth movement scrolling", "Music", "fast scrolling", "Hardware surface.")
+	optdesc=('return to main menu', SMSCDIP, MUSDIP)
+	optlist=("main menu", "Smooth movement scrolling", "Music")
 	screensurf.blit(aboutbg, (0, 20))
 	screensurf.blit(titlebg, (0, 0))
 	optpick=iteratelistB(optlist, optdesc)
 	if optpick==2:
-		if rgbafilterflg==1:
-			rgbafilterflg=0
-			gfxtag.set("rgbafilter", "0")
-		else:
-			rgbafilterflg=1
-			gfxtag.set("rgbafilter", "1")
-	if optpick==3:
 		if movescrlflg==1:
 			movescrlflg=0
 			animtag.set("smoothscrl", "0")
 		else:
 			movescrlflg=1
 			animtag.set("smoothscrl", "1")
-	if optpick==4:
+	if optpick==3:
 		if musicflg==1:
 			sndtag.set("music", "0")
 			musicflg=0
 		else:
 			sndtag.set("music", "1")
 			musicflg=1
-	if optpick==5:
-		if scfast==1:
-			animtag.set("fastscrl", "0")
-			scfast=0
-		else:
-			animtag.set("fastscrl", "1")
-			scfast=1
-	if optpick==6:
-		if useHW==1:
-			gfxtag.set("hwaccel", "0")
-			useHW=0
-		else:
-			gfxtag.set("hwaccel", "1")
-			useHW=1
 print "writing conf.xml"
 mainconf.write("conf.xml")
 print "returning to menu"
