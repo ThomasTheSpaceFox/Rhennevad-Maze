@@ -1,8 +1,8 @@
-Rhennevad Maze
-A Maze-centric 2D adventure game.
-v6.0.0
-Copyright (c) 2015-2017 Thomas Leathers
-
+Rhennevad Maze      
+A Maze-centric 2D adventure game.    
+v6.0.0    
+Copyright (c) 2015-2017 Thomas Leathers     
+    
 
 Rhennevad Maze is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
