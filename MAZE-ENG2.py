@@ -100,7 +100,7 @@ switchofffx=pygame.mixer.Sound(os.path.join('AUDIO', 'switchoff.ogg'))
 
 pygame.display.init()
 pygame.font.init()
-pygame.key.set_repeat(1, 50)
+pygame.key.set_repeat(180, 50)
 
 
 windowicon=pygame.image.load(os.path.join('TILE', 'icon32.png'))
@@ -573,228 +573,19 @@ def tileblit(xval, yval, tilestring, xfoo, yfoo, drawfox=0):
 	#screensurf.blit(tilepost, (0, 0))
 #new function to draw tile grid
 
-def lscrollgrid():
-	screensurfbackup=screensurf.copy()
-	lgridv=pygame.Surface((80, 400))
-	xfoo=FARLEFT3x
-	yfoo=FARLEFT3y
-	tileblit(0, 0, FARLEFT3, xfoo, yfoo)
-	xfoo=FARLEFT2x
-	yfoo=FARLEFT2y
-	tileblit(0, 80, FARLEFT2, xfoo, yfoo)
-	xfoo=FARLEFTx
-	yfoo=FARLEFTy
-	tileblit(0, 160, FARLEFT, xfoo, yfoo)
-	xfoo=FARLEFT0x
-	yfoo=FARLEFT0y
-	tileblit(0, 240, FARLEFT0, xfoo, yfoo)
-	xfoo=FARLEFTZx
-	yfoo=FARLEFTZy
-	tileblit(0, 320, FARLEFTZ, xfoo, yfoo)
-	lgridv.blit(screensurf, (0, 0))
-	screensurf.blit(screensurfbackup, (0, 0))
-	return (lgridv)
-
-
-def uscrollgrid():
-	screensurfbackup=screensurf.copy()
-	#screensurf=pygame.Surface((400, 400), SRCALPHA)
-	#screensurf.fill((255, 255, 255))
-	ugridv=pygame.Surface((400, 88), SRCALPHA)
-	xfoo=FARLEFT3x
-	yfoo=FARLEFT3y
-	tileblit(0, 8, FARLEFT3, xfoo, yfoo)
-	xfoo=LEFTWARD3x
-	yfoo=LEFTWARD3y
-	tileblit(80, 8, LEFTWARD3, xfoo, yfoo)
-	xfoo=FORWARD2x
-	yfoo=FORWARD2y
-	tileblit(160, 8, FORWARD2, xfoo, yfoo)
-	xfoo=RIGHTWARD3x
-	yfoo=RIGHTWARD3y
-	tileblit(240, 8, RIGHTWARD3, xfoo, yfoo)
-	xfoo=FARRIGHT3x
-	yfoo=FARRIGHT3y
-	tileblit(320, 8, FARRIGHT3, xfoo, yfoo)
-	xfoo=LEFTWARD2x
-	yfoo=LEFTWARD2y
-	tileblit(80, 88, LEFTWARD2, xfoo, yfoo)
-	xfoo=RIGHTWARD2x
-	yfoo=RIGHTWARD2y
-	tileblit(240, 88, RIGHTWARD2, xfoo, yfoo)
-	xfoo=FARLEFT2x
-	yfoo=FARLEFT2y
-	tileblit(0, 88, FARLEFT2, xfoo, yfoo)
-	xfoo=FARRIGHT2x
-	yfoo=FARRIGHT2y
-	tileblit(320, 88, FARRIGHT2, xfoo, yfoo)
-	xfoo=FORWARDx
-	yfoo=FORWARDy
-	tileblit(160, 88, FORWARD, xfoo, yfoo)
-	ugridv.blit(screensurf, (0, 0))
-	#ugridv.fill((25, 25, 25))
-	#pygame.image.save(screensurf, "debug1.png")
-	screensurf.blit(screensurfbackup, (0, 0))
-	
-	return (ugridv)
-
-def bscrollgrid():
-	screensurfbackup=screensurf.copy()
-	#screensurf=pygame.Surface((400, 400), SRCALPHA)
-	#screensurf.fill((255, 255, 255))
-	bgridv=pygame.Surface((400, 88), SRCALPHA)
-	xfoo=FARLEFT0x
-	yfoo=FARLEFT0y
-	tileblit(0, 8, FARLEFT0, xfoo, yfoo)
-	xfoo=LEFTWARD0x
-	yfoo=LEFTWARD0y
-	tileblit(80, 8, LEFTWARD0, xfoo, yfoo)
-	xfoo=BACKWARDx
-	yfoo=BACKWARDy
-	tileblit(160, 8, BACKWARD, xfoo, yfoo)
-	xfoo=RIGHTWARD0x
-	yfoo=RIGHTWARD0y
-	tileblit(240, 8, RIGHTWARD0, xfoo, yfoo)
-	xfoo=FARRIGHT0x
-	yfoo=FARRIGHT0y
-	tileblit(320, 8, FARRIGHT0, xfoo, yfoo)
-	xfoo=LEFTWARDZx
-	yfoo=LEFTWARDZy
-	tileblit(80, 88, LEFTWARDZ, xfoo, yfoo)
-	xfoo=RIGHTWARDZx
-	yfoo=RIGHTWARDZy
-	tileblit(240, 88, RIGHTWARDZ, xfoo, yfoo)
-	xfoo=FARLEFTZx
-	yfoo=FARLEFTZy
-	tileblit(0, 88, FARLEFTZ, xfoo, yfoo)
-	xfoo=FARRIGHTZx
-	yfoo=FARRIGHTZy
-	tileblit(320, 88, FARRIGHTZ, xfoo, yfoo)
-	xfoo=BACKWARDZx
-	yfoo=BACKWARDZy
-	tileblit(160, 88, BACKWARDZ, xfoo, yfoo)
-	bgridv.blit(screensurf, (0, -8))
-	#ugridv.fill((25, 25, 25))
-	#pygame.image.save(screensurf, "debug1.png")
-	screensurf.blit(screensurfbackup, (0, 0))
-	
-	return (bgridv)
-
-def rscrollgrid():
-	screensurfbackup=screensurf.copy()
-	rgridv=pygame.Surface((80, 400))
-	xfoo=FARRIGHT3x
-	yfoo=FARRIGHT3y
-	tileblit(0, 0, FARRIGHT3, xfoo, yfoo)
-	xfoo=FARRIGHT2x
-	yfoo=FARRIGHT2y
-	tileblit(0, 80, FARRIGHT2, xfoo, yfoo)
-	xfoo=FARRIGHTx
-	yfoo=FARRIGHTy
-	tileblit(0, 160, FARRIGHT, xfoo, yfoo)
-	xfoo=FARRIGHT0x
-	yfoo=FARRIGHT0y
-	tileblit(0, 240, FARRIGHT0, xfoo, yfoo)
-	xfoo=FARRIGHTZx
-	yfoo=FARRIGHTZy
-	tileblit(0, 320, FARRIGHTZ, xfoo, yfoo)
-	rgridv.blit(screensurf, (0, 0))
-	screensurf.blit(screensurfbackup, (0, 0))
-	return (rgridv)
 
 def tilegriddraw3(xoff=0, yoff=0):
-	yhig=-60
-	xwid=-80
-	for fy in [3, 2, 1, 0, -1, -2, -3]:
+	yhig=20
+	xwid=0
+	for fy in [2, 1, 0, -1, -2]:
 		grdy=playy + fy
-		xwid=-80
-		for fx in [3, 2, 1, 0, -1, -2, -3]:
+		xwid=0
+		for fx in [2, 1, 0, -1, -2]:
 			grdx=playx + fx
 			grdblk=lookpoint(grdx, grdy)
 			tileblit(xwid + xoff, yhig + yoff, grdblk, grdx, grdy)
 			xwid += 80
 		yhig += 80
-	labelscan(xoff, yoff)
-def tilegriddraw2(xoff=0, yoff=0):
-	xfoo=LEFTWARD3x
-	yfoo=LEFTWARD3y
-	tileblit(80 + xoff, 20 + yoff, LEFTWARD3, xfoo, yfoo)
-	xfoo=RIGHTWARD3x
-	yfoo=RIGHTWARD3y
-	tileblit(240 + xoff, 20 + yoff, RIGHTWARD3, xfoo, yfoo)
-	xfoo=FARLEFT3x
-	yfoo=FARLEFT3y
-	tileblit(0 + xoff, 20 + yoff, FARLEFT3, xfoo, yfoo)
-	xfoo=FARRIGHT3x
-	yfoo=FARRIGHT3y
-	tileblit(320 + xoff, 20 + yoff, FARRIGHT3, xfoo, yfoo)
-	xfoo=FORWARD2x
-	yfoo=FORWARD2y
-	tileblit(160 + xoff, 20 + yoff, FORWARD2, xfoo, yfoo)
-	xfoo=LEFTWARD2x
-	yfoo=LEFTWARD2y
-	tileblit(80 + xoff, 100 + yoff, LEFTWARD2, xfoo, yfoo)
-	xfoo=RIGHTWARD2x
-	yfoo=RIGHTWARD2y
-	tileblit(240 + xoff, 100 + yoff, RIGHTWARD2, xfoo, yfoo)
-	xfoo=FARLEFT2x
-	yfoo=FARLEFT2y
-	tileblit(0 + xoff, 100 + yoff, FARLEFT2, xfoo, yfoo)
-	xfoo=FARRIGHT2x
-	yfoo=FARRIGHT2y
-	tileblit(320 + xoff, 100 + yoff, FARRIGHT2, xfoo, yfoo)
-	xfoo=FORWARDx
-	yfoo=FORWARDy
-	tileblit(160 + xoff, 100 + yoff, FORWARD, xfoo, yfoo)
-	xfoo=CENTERx
-	yfoo=CENTERy
-	tileblit(160 + xoff, 180 + yoff, CENTER, xfoo, yfoo)
-	xfoo=LEFTWARDx
-	yfoo=LEFTWARDy
-	tileblit(80 + xoff, 180 + yoff, LEFTWARD, xfoo, yfoo)
-	xfoo=RIGHTWARDx
-	yfoo=RIGHTWARDy
-	tileblit(240 + xoff, 180 + yoff, RIGHTWARD, xfoo, yfoo)
-	xfoo=FARLEFTx
-	yfoo=FARLEFTy
-	tileblit(0 + xoff, 180 + yoff, FARLEFT, xfoo, yfoo)
-	xfoo=FARRIGHTx
-	yfoo=FARRIGHTy
-	tileblit(320 + xoff, 180 + yoff, FARRIGHT, xfoo, yfoo)
-	xfoo=LEFTWARD0x
-	yfoo=LEFTWARD0y
-	tileblit(80 + xoff, 260 + yoff, LEFTWARD0, xfoo, yfoo)
-	xfoo=RIGHTWARD0x
-	yfoo=RIGHTWARD0y
-	tileblit(240 + xoff, 260 + yoff, RIGHTWARD0, xfoo, yfoo)
-	xfoo=FARLEFT0x
-	yfoo=FARLEFT0y
-	tileblit(0 + xoff, 260 + yoff, FARLEFT0, xfoo, yfoo)
-	xfoo=FARRIGHT0x
-	yfoo=FARRIGHT0y
-	tileblit(320 + xoff, 260 + yoff, FARRIGHT0, xfoo, yfoo)
-	xfoo=BACKWARDx
-	yfoo=BACKWARDy
-	tileblit(160 + xoff, 260 + yoff, BACKWARD, xfoo, yfoo)
-	xfoo=LEFTWARDZx
-	yfoo=LEFTWARDZy
-	tileblit(80 + xoff, 340 + yoff, LEFTWARDZ, xfoo, yfoo)
-	xfoo=RIGHTWARDZx
-	yfoo=RIGHTWARDZy
-	tileblit(240 + xoff, 340 + yoff, RIGHTWARDZ, xfoo, yfoo)
-	xfoo=FARLEFTZx
-	yfoo=FARLEFTZy
-	tileblit(0 + xoff, 340 + yoff, FARLEFTZ, xfoo, yfoo)
-	xfoo=FARRIGHTZx
-	yfoo=FARRIGHTZy
-	tileblit(320 + xoff, 340 + yoff, FARRIGHTZ, xfoo, yfoo)
-	xfoo=BACKWARDZx
-	yfoo=BACKWARDZy
-	tileblit(160 + xoff, 340 + yoff, BACKWARDZ, xfoo, yfoo)
-	
-	
-	#if viewfilterflg=="1":
-	#	screensurf.blit(viewfilter, (0, 20))
 	labelscan(xoff, yoff)
 
 def ovrot(Qrot, Qgfx):
