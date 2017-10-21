@@ -52,7 +52,7 @@ screensurf.fill((100, 120, 100))
 aboutbg=pygame.image.load(os.path.join('TILE', 'about-bg.png'))
 titlebg=pygame.image.load(os.path.join('TILE', 'game-bg.png'))
 simplefontB = pygame.font.SysFont(None, 22)
-screensurf.blit(aboutbg, (0, 20))
+screensurf.blit(aboutbg, (0, 40))
 screensurf.blit(titlebg, (0, 0))
 simplefont = pygame.font.SysFont(None, 16)
 

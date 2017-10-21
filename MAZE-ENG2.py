@@ -1816,9 +1816,9 @@ while gameend==('0'):
 		bdropQ=pygame.transform.scale(bdrop, (screz, screz)).convert()
 		filmscx1.fill((0, 0, 0, 0))
 		filmscx1.blit(gamebg, (0, 0))
-		filmscx1.blit(hudfacesel, (54, 340))
-		filmscx1.blit(huggem, (90, 340))
-		filmscx1.blit(scoretext, (100, 340))
+		filmscx1.blit(hudfacesel, (0, 20))
+		filmscx1.blit(huggem, (40, 20))
+		filmscx1.blit(scoretext, (50, 20))
 		playcharfilmsc(1)
 		screensurfUI=pygame.transform.scale(filmscx1, (screz, screz)).convert_alpha()
 		if scfast==1:
@@ -1892,8 +1892,8 @@ while gameend==('0'):
 	screensurf.blit(gamebg, (0, 0))
 	
 	scoretext = simplefont.render(str(pointcnt), True, (0, 0, 0))
-	screensurf.blit(huggem, (90, 340))
-	screensurf.blit(scoretext, (100, 340))
+	screensurf.blit(huggem, (40, 20))
+	screensurf.blit(scoretext, (50, 20))
 	
 	#if cantmoveflg==1:
 		#drawheadertext(CANTMOVE, 1)
@@ -1919,7 +1919,7 @@ while gameend==('0'):
 	elif hudface=="6":
 		hudfacesel=hudfacebored
 	#hudfacesel=pygame.transform.scale(hudfacesel, (30, 30))
-	screensurf.blit(hudfacesel, (54, 340))
+	screensurf.blit(hudfacesel, (0, 20))
 	hudface=hudfacedef
 		
 	#screensufbak=screensurf.copy()
@@ -1953,7 +1953,7 @@ while gameend==('0'):
 					keylist.extend([keyid])
 				if takekey in keylist and takekey!="0":
 					keylist.remove([takekey])
-				screensurf.blit(hudfacesel, (54, 340))
+				screensurf.blit(hudfacesel, (0, 20))
 				hudface=hudfacedef
 				fodx=convdup(convtext)
 				if fodx==1:
@@ -2034,10 +2034,10 @@ while gameend==('0'):
 				screensurf.fill((0, 0, 0, 0))
 				tilegriddraw3()
 				screensurf.blit(gamebg, (0, 0))
-				screensurf.blit(huggem, (90, 340))
-				screensurf.blit(scoretext, (100, 340))
+				screensurf.blit(huggem, (40, 20))
+				screensurf.blit(scoretext, (50, 20))
 				
-				screensurf.blit(hudfacesel, (54, 340))
+				screensurf.blit(hudfacesel, (0, 20))
 				if showlooktext==1:
 					#drawheadertext(looktext, 1)
 					popuptext(looktext)
@@ -2255,7 +2255,7 @@ while gameend==('0'):
 						keylist.extend([keyid])
 					if takekey in keylist and takekey!="0":
 						keylist.remove([takekey])
-					screensurf.blit(hudfacesel, (54, 340))
+					screensurf.blit(hudfacesel, (0, 20))
 					hudface=hudfacedef
 					fodx=convdup(convtext)
 					if fodx==1:

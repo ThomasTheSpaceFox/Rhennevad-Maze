@@ -84,8 +84,10 @@ def resolvescreenscale():
 titlescreenbox = titlescreen.get_rect()
 titlescreenbox.centerx = screensurf.get_rect().centerx
 titlescreenbox.centery = ((screensurf.get_rect().centery) - 90)
+screensurf.blit(titlescreen, (0, 40))
 screensurf.blit(titlebg, (0, 0))
-screensurf.blit(titlescreen, (0, 20))
+
+
 scrnx=scrx
 scrny=scry
 screz=resolvescreenscale()
@@ -115,9 +117,10 @@ while menusel!="quit":
 		print ("Maze execution complete, returning to menu.")
 		pygame.display.set_caption("Rhennevad Maze menu", "Rhennevad Maze menu")
 		screensurf.fill((100, 120, 100))
+		screensurf.blit(titlescreen, (0, 40))
 		screensurf.blit(titlebg, (0, 0))
 		#screensurf.blit(titlescreen, titlescreenbox)
-		screensurf.blit(titlescreen, (0, 20))
+		
 		popuptextMENU("Rhennevad Maze 6.0.0  Copyright (c) 2015-2017 Thomas Leathers")
 		ixreturn=0
 		pygame.key.set_repeat()
@@ -143,8 +146,8 @@ while menusel!="quit":
 		if indlcnt==menuhighnum:
 			textit=simplefontB.render(indx, True, (0, 0, 0), (255, 255, 255))
 		else:
-			textit=simplefontB.render(indx, True, (0, 0, 0), (195, 186, 169))
-		screensurf.blit(textit, (texhigcnt, 349))
+			textit=simplefontB.render(indx, True, (0, 0, 0), (234, 229, 210))
+		screensurf.blit(textit, (texhigcnt, 32))
 		texhigcnt +=(textit.get_width())
 		texhigcnt += texhigjump
 		indlcnt += 1

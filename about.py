@@ -35,14 +35,14 @@ screensurf=pygame.Surface((400, 400))
 screensurf.fill((100, 120, 100))
 aboutbg=pygame.image.load(os.path.join('TILE', 'about-bg.png'))
 titlebg=pygame.image.load(os.path.join('TILE', 'game-bg.png'))
-screensurf.blit(aboutbg, (0, 20))
+screensurf.blit(aboutbg, (0, 40))
 screensurf.blit(titlebg, (0, 0))
 
 
 pygame.display.set_caption("Rhennevad Maze about", "Rhennevad Maze about")
 simplefont = pygame.font.SysFont(None, 16)
 abt = open('live-about.txt')
-pixcnt1=20
+pixcnt1=80
 pixjmp=14
 
 for fnx in abt:
