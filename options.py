@@ -35,11 +35,14 @@ mainconfroot = mainconf.getroot()
 animtag=mainconfroot.find("anim")
 gfxtag=mainconfroot.find("gfx")
 sndtag=mainconfroot.find("sound")
+joytag=mainconfroot.find("joy")
 musicflg=int(sndtag.attrib.get("music", "1"))
 movescrlflg=int(animtag.attrib.get("smoothscrl", "1"))
 scfast=int(animtag.attrib.get("fastscrl", "0"))
 rgbafilterflg=int(gfxtag.attrib.get("rgbafilter", "1"))
 useHW=int(gfxtag.attrib.get("hwaccel", "1"))
+joyid=int(joytag.attrib.get("joyid", "0"))
+joyon=int(joytag.attrib.get("joyon", "0"))
 
 pygame.display.init()
 pygame.font.init()
@@ -62,13 +65,17 @@ def popuptext(textto):
 	textbox.centerx=screensurf.get_rect().centerx
 	textbox.centery=380
 	screensurf.blit(text, textbox)
-
+listhighnum=1
+texhigoffset=0
 def iteratelistB(listtoiterate, descriplist):
+	global rettype
+	global listhighnum
+	global texhigoffset
 	findcnt=0
 	for flx in listtoiterate:
 		findcnt += 1
 	selectmade=0
-	listhighnum=1
+	
 	listbgbox=listbg.get_rect()
 	listbgbox.centerx = screensurf.get_rect().centerx
 	listbgbox.centery = screensurf.get_rect().centery
@@ -76,7 +83,7 @@ def iteratelistB(listtoiterate, descriplist):
 	categscreentext=simplefont.render("Options Menu", True, (0, 0, 0))
 	screensurf.blit(categscreentext, (0, 0))
 	screensurfbak=screensurf.copy()
-	texhigoffset=0
+	
 	while selectmade!=1:
 		listbound=pygame.Surface((170, 248), SRCALPHA)
 		listboundbox=listbound.get_rect()
@@ -133,10 +140,21 @@ def iteratelistB(listtoiterate, descriplist):
 				if event.type == KEYDOWN and event.key == K_RETURN:
 					ixreturn=1
 					evhappenflg=1
+					rettype=0
 					return(listhighnum)
-					
+				if event.type == KEYDOWN and event.key == K_LEFT:
+					ixreturn=1
+					evhappenflg=1
+					rettype=1
+					return(listhighnum)
+				if event.type == KEYDOWN and event.key == K_RIGHT:
+					ixreturn=1
+					evhappenflg=1
+					rettype=2
+					return(listhighnum)
 				#catcnt += 1
 optpick=0
+rettype=0
 while optpick!=1:
 	if rgbafilterflg==1:
 		RGBFILDIP="RGB tinting engine (currently on)"
@@ -156,29 +174,44 @@ while optpick!=1:
 	else:
 		FASDIP="faster scrolling (currently off)"
 	
-	if useHW==1:
-		HWDIP="use hardware surface for playfield (currently on)"
+	if joyon==1:
+		JOYDIP="use joysticks (currently on)"
 	else:
-		HWDIP="use hardware surface for playfield (currently off)"
-	optdesc=('return to main menu', SMSCDIP, MUSDIP)
-	optlist=("main menu", "Smooth movement scrolling", "Music")
+		JOYDIP="use joysticks (currently off)"
+	JOYIDDIP="Joystick id is \"" + str(joyid) + "\" (use left/right)"
+	optdesc=('return to main menu', SMSCDIP, MUSDIP, JOYDIP, JOYIDDIP)
+	optlist=("main menu", "Smooth movement scrolling", "Music", "joysticks", "joystick id")
 	screensurf.blit(aboutbg, (0, 20))
 	screensurf.blit(titlebg, (0, 0))
 	optpick=iteratelistB(optlist, optdesc)
-	if optpick==2:
+	if optpick==2 and rettype==0:
 		if movescrlflg==1:
 			movescrlflg=0
 			animtag.set("smoothscrl", "0")
 		else:
 			movescrlflg=1
 			animtag.set("smoothscrl", "1")
-	if optpick==3:
+	if optpick==3 and rettype==0:
 		if musicflg==1:
 			sndtag.set("music", "0")
 			musicflg=0
 		else:
 			sndtag.set("music", "1")
 			musicflg=1
+	if optpick==4 and rettype==0:
+		if joyon==1:
+			joytag.set("joyon", "0")
+			joyon=0
+		else:
+			joytag.set("joyon", "1")
+			joyon=1
+	if optpick==5 and rettype==1:
+		if joyid!=0:
+			joyid -= 1
+			joytag.set("joyid", str(joyid))
+	if optpick==5 and rettype==2:
+		joyid += 1
+		joytag.set("joyid", str(joyid))
 print "writing conf.xml"
 mainconf.write("conf.xml")
 print "returning to menu"

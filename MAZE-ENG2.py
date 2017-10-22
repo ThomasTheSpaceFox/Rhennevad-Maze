@@ -64,18 +64,25 @@ else:
 	print ("Global variable: 'scrny' not present. using default.")
 	scrny=400
 
+
 #load conf.xml
 mainconf = ET.parse("conf.xml")
 mainconfroot = mainconf.getroot()
 animtag=mainconfroot.find("anim")
 gfxtag=mainconfroot.find("gfx")
 sndtag=mainconfroot.find("sound")
+joytag=mainconfroot.find("joy")
 musicflg=int(sndtag.attrib.get("music", "1"))
 movescrlflg=int(animtag.attrib.get("smoothscrl", "1"))
 rgbafilterflg=int(gfxtag.attrib.get("rgbafilter", "1"))
 scfast=int(animtag.attrib.get("fastscrl", "0"))
 useHW=int(gfxtag.attrib.get("hwaccel", "1"))
-
+joyid=int(joytag.attrib.get("joyid", "0"))
+joyon=int(joytag.attrib.get("joyon", "0"))
+if joyon==1:
+	JOYSTICK=joyid
+else:
+	JOYSTICK=None
 #load main.grid file
 
 def debugmsg(msg, printplaypos=0):
@@ -1050,6 +1057,8 @@ def convscreenwait(XQscrez, sxw, sxh, nillx):
 	while True:
 		time.sleep(.1)
 		for event in pygame.event.get():
+			if event.type == JOYBUTTONDOWN:
+				return([0, 0, 0, 0])
 			if event.type == KEYDOWN and event.key != K_UP and event.key != K_DOWN and event.key != K_LEFT and event.key != K_RIGHT and event.key != K_w and event.key != K_a and event.key != K_s and  event.key != K_d:
 				return([0, 0, 0, 0])
 			if event.type == KEYDOWN and nillx==1:
@@ -1273,12 +1282,74 @@ def drawheadertext(textto, linemode):
 		screensurf.blit(text, (0, 12))
 #main input reading function
 showlooktext=0
+#JOYSTICK=0
+#joystick support
+if JOYSTICK!=None:
+	print "init joystick..."
+	pygame.joystick.init()
+	try:
+		mainjoy=pygame.joystick.Joystick(JOYSTICK)
+		mainjoy.init()
+		if mainjoy.get_numaxes()<2:
+			print "WARNING: Joystick does not have at least two axes!"
+			JOYSTICK=None
+		if mainjoy.get_numhats()>=1:
+			print "hat found, enabling hat support."
+			joyhat=1
+		else:
+			joyhat=0
+		print pygame.joystick.get_count()
+	except pygame.error:
+		print "Invalid joystick id."
+		JOYSTICK=None
 def keyread():
 	keyscantime=0
 	foob=0
 	while True:
-		time.sleep(.05)
+		#joystick axis
+		time.sleep(.03)
+		if JOYSTICK!=None:
+			lraxis=mainjoy.get_axis(0)
+			#print lraxis
+			if lraxis>0.4:
+				return(RIGHTWODBIND)
+				pygame.event.clear()
+			if lraxis<-0.4:
+				return(LEFTWORDBIND)
+				pygame.event.clear()
+			udaxis=mainjoy.get_axis(1)
+			#print lraxis
+			if udaxis<-0.4:
+				return(FORWARDWORDBIND)
+				pygame.event.clear()
+			if udaxis>0.4:
+				return(BACKWARDWORDBIND)
+				pygame.event.clear()
+			###hat support (only enabled when at least 1 hat is present.)
+			if joyhat==1:
+				bothaxis=mainjoy.get_hat(0)
+				lraxis=bothaxis[0]
+				#print lraxis
+				if lraxis>0.4:
+					return(RIGHTWODBIND)
+					pygame.event.clear()
+				if lraxis<-0.4:
+					return(LEFTWORDBIND)
+					pygame.event.clear()
+				#udaxis=mainjoy.get_axis(1)
+				udaxis=bothaxis[1]
+				#print lraxis
+				if udaxis>0.4:
+					return(FORWARDWORDBIND)
+					pygame.event.clear()
+				if udaxis<-0.4:
+					return(BACKWARDWORDBIND)
+					pygame.event.clear()
+		
 		for event in pygame.event.get():
+			if event.type == JOYBUTTONDOWN:
+				if event.button==0:
+					return("space")
 			if event.type == KEYDOWN and event.key == K_w:
 				return(FORWARDWORDBIND)
 			if event.type == KEYDOWN and event.key == K_a:
