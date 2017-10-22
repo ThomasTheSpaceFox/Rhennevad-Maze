@@ -1,6 +1,6 @@
 <conf>
 	<anim fastscrl="0" smoothscrl="1" />
-	<gfx hwaccel="0" rgbafilter="0" scrx="700" scry="700" />
+	<gfx hwaccel="0" rgbafilter="0" scrx="400" scry="400" />
 	<sound music="1" />
 	<joy joyid="0" joyon="0" />
 </conf>
