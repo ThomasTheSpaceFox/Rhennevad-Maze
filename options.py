@@ -44,6 +44,31 @@ useHW=int(gfxtag.attrib.get("hwaccel", "1"))
 joyid=int(joytag.attrib.get("joyid", "0"))
 joyon=int(joytag.attrib.get("joyon", "0"))
 
+
+if joyon==1:
+	JOYSTICK=joyid
+else:
+	JOYSTICK=None
+
+if JOYSTICK!=None:
+	print "init joystick..."
+	pygame.joystick.init()
+	try:
+		mainjoy=pygame.joystick.Joystick(JOYSTICK)
+		mainjoy.init()
+		if mainjoy.get_numaxes()<2:
+			print "WARNING: Joystick does not have at least two axes!"
+			JOYSTICK=None
+		if mainjoy.get_numhats()>=1:
+			print "hat found, enabling hat support."
+			joyhat=1
+		else:
+			joyhat=0
+		print pygame.joystick.get_count()
+	except pygame.error:
+		print "Invalid joystick id."
+		JOYSTICK=None
+
 pygame.display.init()
 pygame.font.init()
 screensurfdex=pygame.display.set_mode((scrnx, scrny))
@@ -128,7 +153,62 @@ def iteratelistB(listtoiterate, descriplist):
 		evhappenflg=0
 		while evhappenflg==0:
 			time.sleep(.1)
+			if JOYSTICK!=None:
+				#time.sleep(.1)
+				lraxis=mainjoy.get_axis(0)
+				#print lraxis
+				if lraxis<-0.5:
+					ixreturn=1
+					evhappenflg=1
+					rettype=1
+					return(listhighnum)
+				if lraxis>0.5:
+					ixreturn=1
+					evhappenflg=1
+					rettype=2
+					return(listhighnum)
+				udaxis=mainjoy.get_axis(1)
+				#print lraxis
+				if udaxis<-0.5:
+					listhighnum -= 1
+					texhigoffset -= 14
+					evhappenflg=1
+				if udaxis>0.5:
+					listhighnum += 1
+					texhigoffset += 14
+					evhappenflg=1
+				###hat support (only enabled when at least 1 hat is present.)
+				if joyhat==1:
+					bothaxis=mainjoy.get_hat(0)
+					lraxis=bothaxis[0]
+					#print lraxis
+					if lraxis<-0.4:
+						ixreturn=1
+						evhappenflg=1
+						rettype=1
+						return(listhighnum)
+					if lraxis>0.4:
+						ixreturn=1
+						evhappenflg=1
+						rettype=2
+						return(listhighnum)
+					udaxis=bothaxis[1]
+					#print lraxis
+					if udaxis>0.4:
+						listhighnum -= 1
+						texhigoffset -= 14
+						evhappenflg=1
+					if udaxis<-0.4:
+						listhighnum += 1
+						texhigoffset += 14
+						evhappenflg=1
 			for event in pygame.event.get():
+				if event.type == JOYBUTTONDOWN:
+					if event.button==0:
+						ixreturn=1
+						evhappenflg=1
+						rettype=0
+						return(listhighnum)
 				if event.type == KEYDOWN and event.key == K_UP:
 					listhighnum -= 1
 					texhigoffset -= 14
@@ -154,8 +234,8 @@ def iteratelistB(listtoiterate, descriplist):
 					return(listhighnum)
 				#catcnt += 1
 optpick=0
-rettype=0
-while optpick!=1:
+rettype=None
+while not (optpick==1 and rettype==0):
 	if rgbafilterflg==1:
 		RGBFILDIP="RGB tinting engine (currently on)"
 	else:
@@ -175,10 +255,10 @@ while optpick!=1:
 		FASDIP="faster scrolling (currently off)"
 	
 	if joyon==1:
-		JOYDIP="use joysticks (currently on)"
+		JOYDIP="use joysticks (currently on) [restart required]"
 	else:
-		JOYDIP="use joysticks (currently off)"
-	JOYIDDIP="Joystick id is \"" + str(joyid) + "\" (use left/right)"
+		JOYDIP="use joysticks (currently off) [restart required]"
+	JOYIDDIP="Joystick id is \"" + str(joyid) + "\" (use left/right) [restart required]"
 	optdesc=('return to main menu', SMSCDIP, MUSDIP, JOYDIP, JOYIDDIP)
 	optlist=("main menu", "Smooth movement scrolling", "Music", "joysticks", "joystick id")
 	screensurf.blit(aboutbg, (0, 20))

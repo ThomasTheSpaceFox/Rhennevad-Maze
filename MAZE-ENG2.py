@@ -1304,50 +1304,89 @@ if JOYSTICK!=None:
 	except pygame.error:
 		print "Invalid joystick id."
 		JOYSTICK=None
+jspolar=0
+hatpolar=0
 def keyread():
+	global jspolar
+	global hatpolar
 	keyscantime=0
 	foob=0
 	while True:
 		#joystick axis
 		time.sleep(.03)
 		if JOYSTICK!=None:
-			lraxis=mainjoy.get_axis(0)
-			#print lraxis
-			if lraxis>0.4:
-				return(RIGHTWODBIND)
-				pygame.event.clear()
-			if lraxis<-0.4:
-				return(LEFTWORDBIND)
-				pygame.event.clear()
-			udaxis=mainjoy.get_axis(1)
-			#print lraxis
-			if udaxis<-0.4:
-				return(FORWARDWORDBIND)
-				pygame.event.clear()
-			if udaxis>0.4:
-				return(BACKWARDWORDBIND)
-				pygame.event.clear()
+			if jspolar==0:
+				lraxis=mainjoy.get_axis(0)
+				#print lraxis
+				if lraxis>0.5:
+					jspolar=1
+					return(RIGHTWODBIND)
+				if lraxis<-0.5:
+					jspolar=1
+					return(LEFTWORDBIND)
+				udaxis=mainjoy.get_axis(1)
+				#print lraxis
+				if udaxis<-0.5:
+					jspolar=0
+					return(FORWARDWORDBIND)
+				if udaxis>0.5:
+					jspolar=0
+					return(BACKWARDWORDBIND)
+			else:
+				udaxis=mainjoy.get_axis(1)
+				#print lraxis
+				if udaxis<-0.5:
+					jspolar=0
+					return(FORWARDWORDBIND)
+				if udaxis>0.5:
+					jspolar=0
+					return(BACKWARDWORDBIND)
+				lraxis=mainjoy.get_axis(0)
+				#print lraxis
+				if lraxis>0.5:
+					jspolar=1
+					return(RIGHTWODBIND)
+				if lraxis<-0.5:
+					jspolar=1
+					return(LEFTWORDBIND)
 			###hat support (only enabled when at least 1 hat is present.)
 			if joyhat==1:
 				bothaxis=mainjoy.get_hat(0)
-				lraxis=bothaxis[0]
-				#print lraxis
-				if lraxis>0.4:
-					return(RIGHTWODBIND)
-					pygame.event.clear()
-				if lraxis<-0.4:
-					return(LEFTWORDBIND)
-					pygame.event.clear()
-				#udaxis=mainjoy.get_axis(1)
-				udaxis=bothaxis[1]
-				#print lraxis
-				if udaxis>0.4:
-					return(FORWARDWORDBIND)
-					pygame.event.clear()
-				if udaxis<-0.4:
-					return(BACKWARDWORDBIND)
-					pygame.event.clear()
-		
+				if hatpolar==0:
+					lraxis=bothaxis[0]
+					#print lraxis
+					if lraxis>0.4:
+						hatpolar=1
+						return(RIGHTWODBIND)
+					if lraxis<-0.4:
+						hatpolar=1
+						return(LEFTWORDBIND)
+					udaxis=bothaxis[1]
+					#print lraxis
+					if udaxis>0.4:
+						hatpolar=0
+						return(FORWARDWORDBIND)
+					if udaxis<-0.4:
+						hatpolar=0
+						return(BACKWARDWORDBIND)
+				else:
+					udaxis=bothaxis[1]
+					#print lraxis
+					if udaxis>0.4:
+						hatpolar=0
+						return(FORWARDWORDBIND)
+					if udaxis<-0.4:
+						hatpolar=0
+						return(BACKWARDWORDBIND)
+					lraxis=bothaxis[0]
+					#print lraxis
+					if lraxis>0.4:
+						hatpolar=1
+						return(RIGHTWODBIND)
+					if lraxis<-0.4:
+						hatpolar=1
+						return(LEFTWORDBIND)
+				
 		for event in pygame.event.get():
 			if event.type == JOYBUTTONDOWN:
 				if event.button==0:

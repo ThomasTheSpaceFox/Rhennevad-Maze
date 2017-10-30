@@ -70,6 +70,37 @@ screensurfdex=pygame.display.set_mode((scrnx, scrny), RESIZABLE)
 screensurf=screensurfdex.copy()
 
 screensurf.fill((100, 120, 100))
+joytag=mainconfroot.find("joy")
+
+joyid=int(joytag.attrib.get("joyid", "0"))
+joyon=int(joytag.attrib.get("joyon", "0"))
+if joyon==1:
+	JOYSTICK=joyid
+else:
+	JOYSTICK=None
+
+if JOYSTICK!=None:
+	print "init joystick..."
+	pygame.joystick.init()
+	try:
+		mainjoy=pygame.joystick.Joystick(JOYSTICK)
+		mainjoy.init()
+		if mainjoy.get_numaxes()<2:
+			print "WARNING: Joystick does not have at least two axes!"
+			JOYSTICK=None
+		if mainjoy.get_numhats()>=1:
+			print "hat found, enabling hat support."
+			joyhat=1
+		else:
+			joyhat=0
+		print pygame.joystick.get_count()
+	except pygame.error:
+		print "Invalid joystick id."
+		JOYSTICK=None
+jspolar=0
+hatpolar=0
+
+
 
 def resolvescreenscale():
 	if scrnx<scrny:
@@ -160,7 +191,49 @@ while menusel!="quit":
 	#sets ixreturn to 1 when return is pressed.
 	while evhappenflg==0:
 		time.sleep(.1)
+		if JOYSTICK!=None:
+			#time.sleep(.1)
+			lraxis=mainjoy.get_axis(0)
+			#print lraxis
+			if lraxis>0.5:
+				menuhighnum += 1
+				evhappenflg=1
+			if lraxis<-0.5:
+				menuhighnum -= 1
+				evhappenflg=1
+			udaxis=mainjoy.get_axis(1)
+			#print lraxis
+			if udaxis<-0.5:
+				menuhighnum -= 1
+				evhappenflg=1
+			if udaxis>0.5:
+				menuhighnum += 1
+				evhappenflg=1
+			###hat support (only enabled when at least 1 hat is present.)
+			if joyhat==1:
+				bothaxis=mainjoy.get_hat(0)
+				lraxis=bothaxis[0]
+				#print lraxis
+				if lraxis>0.4:
+					menuhighnum += 1
+					evhappenflg=1
+				if lraxis<-0.4:
+					menuhighnum -= 1
+					evhappenflg=1
+				udaxis=bothaxis[1]
+				#print lraxis
+				if udaxis>0.4:
+					menuhighnum -= 1
+					evhappenflg=1
+				if udaxis<-0.4:
+					menuhighnum += 1
+					evhappenflg=1
 		for event in pygame.event.get():
+			if event.type == JOYBUTTONDOWN:
+				if event.button==0:
+					ixreturn=1
+					evhappenflg=1
+					break
 			if event.type == KEYDOWN and event.key == K_UP:
 				menuhighnum -= 1
 				evhappenflg=1
@@ -177,6 +250,8 @@ while menusel!="quit":
 				ixreturn=1
 				evhappenflg=1
 				break
+			
+					
 			if event.type == QUIT:
 				menusel="quit"
 				evhappenflg=1

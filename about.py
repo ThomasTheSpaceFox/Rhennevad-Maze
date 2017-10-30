@@ -38,6 +38,33 @@ titlebg=pygame.image.load(os.path.join('TILE', 'game-bg.png'))
 screensurf.blit(aboutbg, (0, 40))
 screensurf.blit(titlebg, (0, 0))
 
+joytag=mainconfroot.find("joy")
+
+joyid=int(joytag.attrib.get("joyid", "0"))
+joyon=int(joytag.attrib.get("joyon", "0"))
+if joyon==1:
+	JOYSTICK=joyid
+else:
+	JOYSTICK=None
+
+if JOYSTICK!=None:
+	print "init joystick..."
+	pygame.joystick.init()
+	try:
+		mainjoy=pygame.joystick.Joystick(JOYSTICK)
+		mainjoy.init()
+		if mainjoy.get_numaxes()<2:
+			print "WARNING: Joystick does not have at least two axes!"
+			JOYSTICK=None
+		if mainjoy.get_numhats()>=1:
+			print "hat found, enabling hat support."
+			joyhat=1
+		else:
+			joyhat=0
+		print pygame.joystick.get_count()
+	except pygame.error:
+		print "Invalid joystick id."
+		JOYSTICK=None
 
 pygame.display.set_caption("Rhennevad Maze about", "Rhennevad Maze about")
 simplefont = pygame.font.SysFont(None, 16)
@@ -63,4 +90,8 @@ while evhappenflg2==0:
 			if event.type == KEYDOWN and event.key == K_RETURN:
 				evhappenflg2=1
 				break
+			if event.type == JOYBUTTONDOWN:
+				if event.button==0:
+					evhappenflg2=1
+					break
 screensurfdex=pygame.display.set_mode((scrnx, scrny), RESIZABLE)
